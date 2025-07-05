@@ -1,9 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import * as THREE from 'three';
+import { useEffect, useState } from "react";
+import * as THREE from "three";
 
-export type TextureDict<T extends readonly string[]> = Record<T[number], THREE.Texture>;
+export type TextureDict<T extends readonly string[]> = Record<
+  T[number],
+  THREE.Texture
+>;
 
 /**
  * Loads all the given URLs via THREE.TextureLoader.
@@ -12,15 +15,12 @@ export type TextureDict<T extends readonly string[]> = Record<T[number], THREE.T
 export default function useAssetLoader<const Urls extends readonly string[]>(
   urls: Urls
 ): [TextureDict<Urls> | null, boolean, Error?] {
-  const [textures, setTextures] =
-    useState<TextureDict<Urls> | null>(null);
+  const [textures, setTextures] = useState<TextureDict<Urls> | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<Error>();
 
   useEffect(() => {
     let alive = true;
-
-    // Local mutable map while loading
     const map = {} as TextureDict<Urls>;
 
     const manager = new THREE.LoadingManager();
@@ -49,10 +49,9 @@ export default function useAssetLoader<const Urls extends readonly string[]>(
     });
 
     return () => {
-      alive = false;           // stop setState after unmount
+      alive = false;
     };
-    // key the effect by *value* not identity
-  }, [JSON.stringify(urls)]);
+  }, [urls]);
 
   return [textures, loaded, error];
 }

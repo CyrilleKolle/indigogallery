@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls as DreiOrbitControls,
   Stars,
@@ -8,35 +8,30 @@ import {
   useProgress,
   Html,
 } from "@react-three/drei";
-import { PLANETS, YEARS } from "@/constants";
+import { PLANETS } from "@/constants";
 import { OrbitingPlanet } from "./OrbitingPlanet";
 import { CustomStarField } from "./CustomStarField";
 import { Sun } from "./Sun";
 import { LabeledGlobe } from "./Indigo";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useRef } from "react";
 import { AsteroidBelt } from "./AsteriodBelt";
 
 import type { OrbitControls as ThreeOrbitControls } from "three-stdlib";
-import { CameraRegistrar } from "./CameraRegistrar";
-import { useGlobeStore } from "@/store/useGlobeStore";
+import CameraRegistrar from "./CameraRegistrar";
+// import { useAuth } from "./AuthProvider";
 
 export function YearGlobe() {
   const controlsRef = useRef<ThreeOrbitControls>(null);
-  const register = useGlobeStore((s) => s.register);
+  // const { user, ready } = useAuth();
+  // const { camera } = useThree();
+  // const register = useGlobeStore((s) => s.register);
   const { progress } = useProgress();
-  const galaxyHDR = "/galaxy.jpg";
-  const globeImages = YEARS.map((y) => `/${y}.jpeg`);
-  const planetMaps = PLANETS.flatMap(
-    (p) => [p.bumpMap, p.texture].filter(Boolean) as string[]
-  );
-  const urls = [galaxyHDR, ...globeImages, ...planetMaps];
-
-  useEffect(() => {
-    if (controlsRef.current) {
-      const { camera } = useThree();
-      register(camera as any, controlsRef.current);
-    }
-  }, [register]);
+  const galaxyHDR = "/galaxy.hdr";
+  // const globeImages = YEARS.map((y) => `/${y}.jpeg`);
+  // const planetMaps = PLANETS.flatMap(
+  //   (p) => [p.bumpMap, p.texture].filter(Boolean) as string[]
+  // );
+  // const urls = [galaxyHDR, ...globeImages, ...planetMaps];
 
   return (
     <Canvas
@@ -56,7 +51,7 @@ export function YearGlobe() {
           </Html>
         }
       >
-        <CameraRegistrar />
+        <CameraRegistrar controlsRef={controlsRef} />
         <Environment
           files={galaxyHDR}
           background

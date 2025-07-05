@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useGlobeStore } from "@/store/useGlobeStore";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 type Props = { year: string; files: string[] };
 
@@ -18,7 +19,11 @@ export function YearGallery({ year, files }: Props) {
       className="
     [@keyframes_fadeInUp{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}]
     [animation:fadeInUp_0.5s_ease-out_forwards]
-    py-8 px-4 md:px-8 flex flex-col items-center gap-8"
+    py-8 px-4 md:px-8 flex flex-col items-center gap-8
+    
+
+    z-50 fixed inset-0 pointer-events-auto
+    "
     >
       <div className="flex flex-row items-center justify-center gap-6 w-full max-w-3xl">
         <h1 className="group flex flex-row gap-2 text-lg text-white md:text-2xl tracking-wide text-center select-none transition-colors duration-150 hover:text-indigo-300">

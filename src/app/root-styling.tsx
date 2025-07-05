@@ -2,7 +2,7 @@
 
 import StyledComponentsRegistry from "@/lib/registry";
 import localFont from "next/font/local";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
 const bytebounce = localFont({
   src: "../../public/bytebounce/ByteBounce.ttf",

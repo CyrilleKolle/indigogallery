@@ -10,22 +10,13 @@ interface ProgressState {
   total: number;
 }
 
-// wrap the drei hook so updates only flow through an effect
 export function useDeferredProgress(): ProgressState {
   const raw = useProgress();
   const [state, setState] = useState<ProgressState>(raw);
 
-  // whenever any of these fields change, schedule an update *after* render
   useEffect(() => {
     setState(raw);
-  }, [
-    raw.active,
-    raw.progress,
-    raw.item,
-    raw.loaded,
-    raw.total,
-    raw.errors.join(","),
-  ]);
+  }, [raw]);
 
   return state;
 }

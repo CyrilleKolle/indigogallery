@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import fs from "fs";
 import path from "path";
-import { YearGallery } from "@/components/YearGallery";
+import { YearGallery } from "@/app/(protected)/YearGallery";
 
 export async function generateStaticParams() {
   const yearsDir = path.join(process.cwd(), "public", "years");
@@ -12,12 +12,21 @@ export async function generateStaticParams() {
   return years;
 }
 
-export default function YearPage({ params }: { params: { year: string } }) {
-  const dir = path.join(process.cwd(), "public", "years", params.year);
-  if (!fs.existsSync(dir)) return notFound();
+export default async function YearPage({
+  params,
+}: {
+  params: Promise<{ year: string }>;
+}) {
+  const { year } = await params;
+  const dir = path.join(process.cwd(), "public", "years", year);
+  try {
+    await fs.promises.access(dir, fs.constants.R_OK);
+  } catch {
+    return notFound();
+  }
 
   const files = fs.readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f));
 
   if (files.length === 0) return notFound();
-  return <YearGallery year={params.year} files={files} />;
+  return <YearGallery year={year} files={files} />;
 }

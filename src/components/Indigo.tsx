@@ -7,8 +7,8 @@ import { YEARS } from "@/constants";
 import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { useThree } from "@react-three/fiber";
 import { useGlobeStore } from "@/store/useGlobeStore";
+import { useAuth } from "./AuthProvider";
 
 const LATS = YEARS.map((_, i) => 30 * Math.sin(i));
 const LONS = YEARS.map((_, i) => (360 / YEARS.length) * i);
@@ -19,9 +19,14 @@ export function LabeledGlobe({ radius = 4 }: LabeledGlobeProps) {
   const router = useRouter();
   const focusYear = useGlobeStore((s) => s.focusYear);
 
+  const [isPending, startTransition] = React.useTransition();
+
   const imageUrls = YEARS.map((year) => `/${year}.jpeg`);
   const textures = useLoader(THREE.TextureLoader, imageUrls);
-  const { camera, gl, scene } = useThree();
+  // const { camera, gl, scene } = useThree();
+  const { user, ready } = useAuth();
+
+  const globeLocked = !ready || !user;
 
   const labelTexture = useMemo(() => {
     const W = 2048,
@@ -128,7 +133,7 @@ export function LabeledGlobe({ radius = 4 }: LabeledGlobeProps) {
     tex.repeat.set(1, 1);
     tex.needsUpdate = true;
     return tex;
-  }, [LATS, LONS]);
+  }, []);
 
   const yearVectors = useMemo(() => {
     return YEARS.map((year, i) => {
@@ -146,6 +151,11 @@ export function LabeledGlobe({ radius = 4 }: LabeledGlobeProps) {
   }, []);
 
   function onClickGlobe(e: ThreeEvent<MouseEvent>) {
+    if (isPending) return;
+    if (globeLocked) {
+      e.stopPropagation();
+      return;
+    }
     e.stopPropagation();
     const clickVec = e.point.clone().normalize();
 
@@ -160,7 +170,9 @@ export function LabeledGlobe({ radius = 4 }: LabeledGlobeProps) {
     });
 
     focusYear(best.year, best.vec, radius, () => {
-      router.push(`/year/${best.year}`); 
+      startTransition(() => {
+        router.push(`/year/${best.year}`);
+      });
     });
   }
 
