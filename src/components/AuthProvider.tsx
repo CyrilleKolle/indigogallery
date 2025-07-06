@@ -1,7 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  User,
+  browserLocalPersistence,
+  setPersistence,
+} from "firebase/auth";
 import { clientAuth } from "@/lib/firebaseClient";
 
 type AuthState = { user: User | null; ready: boolean };
@@ -15,13 +20,17 @@ export default function AuthProvider({
 }) {
   const [state, setState] = useState<AuthState>({ user: null, ready: false });
 
-  useEffect(
-    () =>
-      onAuthStateChanged(clientAuth, (u) =>
-        setState({ user: u, ready: true }),
-      ),
-    [],
-  );
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setPersistence(clientAuth, browserLocalPersistence)
+      .catch((e) => console.error("setPersistence failed:", e))
+      .finally(() => {
+        const unsub = onAuthStateChanged(clientAuth, (u) =>
+          setState({ user: u, ready: true })
+        );
+        return unsub;
+      });
+  }, []);
 
   return <AuthCtx.Provider value={state}>{children}</AuthCtx.Provider>;
 }

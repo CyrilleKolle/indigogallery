@@ -5,8 +5,6 @@ import {
   OrbitControls as DreiOrbitControls,
   Stars,
   Environment,
-  useProgress,
-  Html,
 } from "@react-three/drei";
 import { PLANETS } from "@/constants";
 import { OrbitingPlanet } from "./OrbitingPlanet";
@@ -18,39 +16,24 @@ import { AsteroidBelt } from "./AsteriodBelt";
 
 import type { OrbitControls as ThreeOrbitControls } from "three-stdlib";
 import CameraRegistrar from "./CameraRegistrar";
+import ProgressBridge from "./ProgressBridge";
+
 // import { useAuth } from "./AuthProvider";
 
 export function YearGlobe() {
   const controlsRef = useRef<ThreeOrbitControls>(null);
-  // const { user, ready } = useAuth();
-  // const { camera } = useThree();
-  // const register = useGlobeStore((s) => s.register);
-  const { progress } = useProgress();
   const galaxyHDR = "/galaxy.hdr";
-  // const globeImages = YEARS.map((y) => `/${y}.jpeg`);
-  // const planetMaps = PLANETS.flatMap(
-  //   (p) => [p.bumpMap, p.texture].filter(Boolean) as string[]
-  // );
-  // const urls = [galaxyHDR, ...globeImages, ...planetMaps];
 
   return (
     <Canvas
       gl={{ antialias: true, alpha: true }}
-      style={{ width: "100vw", height: "100vh", background: "transparent" }}
+      style={casvasStyle}
       dpr={1}
       camera={{ position: [60, 200, 800], fov: 50, near: 0.1, far: 2000 }}
       shadows={false}
     >
-      <Suspense
-        fallback={
-          <Html center>
-            <div style={{ color: "white" }}>
-              <h1>Loading assets...</h1>
-              <p>{progress.toFixed(2)}% loaded</p>
-            </div>
-          </Html>
-        }
-      >
+      <Suspense fallback={null}>
+        <ProgressBridge />
         <CameraRegistrar controlsRef={controlsRef} />
         <Environment
           files={galaxyHDR}
@@ -65,14 +48,8 @@ export function YearGlobe() {
             height: 0.1,
             scale: 1,
           }}
-
-          // map={null}
         />
-
-        {/* 2) Asteroid belt */}
         <AsteroidBelt innerR={22} outerR={28} />
-
-        <color attach="background" args={["#000"]} />
         <hemisphereLight args={[0xffffff, 0x222222, 0.8]} />
         <directionalLight castShadow={false} />
         <Sun />
@@ -91,10 +68,6 @@ export function YearGlobe() {
           enableDamping
           dampingFactor={0.1}
         />
-        {/*         
-        <Environment 
-
-        preset="" background={false} /> */}
         <Stars
           radius={1000}
           depth={10}
@@ -123,3 +96,9 @@ export function YearGlobe() {
     </Canvas>
   );
 }
+
+const casvasStyle: React.CSSProperties = {
+  width: "100vw",
+  height: "100vh",
+  background: "transparent",
+};

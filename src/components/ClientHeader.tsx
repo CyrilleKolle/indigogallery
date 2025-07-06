@@ -10,6 +10,11 @@ export default function ClientHeader() {
 
   const handleSignOut = async () => {
     await signOut(clientAuth);
+    await fetch("/api/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
     router.replace("/login");
   };
 

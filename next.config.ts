@@ -1,14 +1,11 @@
 import type { NextConfig } from "next";
 
-import withRspack from "next-rspack";
-
 const nextConfig: NextConfig = {
   /* config options here */
   compiler: {
     styledComponents: true,
   },
   turbopack: {
-
     resolveAlias: {
       "@": "./src",
       "@/components": "./src/components",
@@ -38,4 +35,4 @@ const nextConfig: NextConfig = {
   experimental: {},
 };
 
-export default withRspack(nextConfig);
+export default nextConfig;

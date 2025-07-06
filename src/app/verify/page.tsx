@@ -2,7 +2,11 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { signInWithCustomToken } from "firebase/auth";
+import {
+  signInWithCustomToken,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { clientAuth } from "@/lib/firebaseClient";
 import {
   ModalContainer,
@@ -38,7 +42,14 @@ export default function Verify() {
         return;
       }
       const { customToken } = await res.json();
+      await setPersistence(clientAuth, browserLocalPersistence);
       await signInWithCustomToken(clientAuth, customToken);
+      const idToken = await clientAuth.currentUser!.getIdToken();
+      await fetch("/api/session-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      });
       router.replace("/");
     } catch (e: unknown) {
       if (e instanceof Error) {

@@ -8,18 +8,16 @@ import { useAuth } from "./AuthProvider";
  */
 export default function UnauthOverlay() {
   const { user, ready } = useAuth();
+  if (!ready) return null;
 
-  {/* If the user is authenticated or if the auth state is not ready, do not render the overlay. */}
-  if (!ready || user) return null; 
+  if (user) return null;
 
   return (
     <div
       className="
         fixed inset-0 z-20 bg-transparent backdrop-blur-xs
         flex items-center justify-center
-        pointer-events-auto"           
-    >
-      {/* the public route pages render under here */}
-    </div>
+        pointer-events-auto"
+    ></div>
   );
 }
