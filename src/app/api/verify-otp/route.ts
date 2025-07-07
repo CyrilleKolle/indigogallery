@@ -26,18 +26,9 @@ export async function POST(req: NextRequest) {
 
   await snap.ref.update({ otpHash: "", otpExpires: 0 });
 
-  const customToken = await adminAuth.createCustomToken(memberId, {
-    sessionExpiresIn: 60 * 60 * 24 * 30, // 30 days
-  });
+  const customToken = await adminAuth.createCustomToken(memberId);
 
   const res = NextResponse.json(customToken);
-  res.cookies.set("__session", customToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-    path: "/",
-    sameSite: "lax",
-  });
   res.cookies.set("preAuth", "", {
     maxAge: 0,
     path: "/",

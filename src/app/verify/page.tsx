@@ -49,6 +49,7 @@ export default function Verify() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
+        credentials: "include",
       });
       router.replace("/");
     } catch (e: unknown) {
