@@ -17,8 +17,8 @@ import { AsteroidBelt } from "./AsteriodBelt";
 import type { OrbitControls as ThreeOrbitControls } from "three-stdlib";
 import CameraRegistrar from "./CameraRegistrar";
 import ProgressBridge from "./ProgressBridge";
-
-// import { useAuth } from "./AuthProvider";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { Moon } from "./Moon";
 
 export function YearGlobe() {
   const controlsRef = useRef<ThreeOrbitControls>(null);
@@ -53,6 +53,7 @@ export function YearGlobe() {
         <hemisphereLight args={[0xffffff, 0x222222, 0.8]} />
         <directionalLight castShadow={false} />
         <Sun />
+        <Moon phase={160} />
         <ambientLight intensity={1} />
         <directionalLight position={[15, 40, 100]} intensity={1} />
         <directionalLight position={[-15, -40, -100]} intensity={0.5} />
@@ -93,6 +94,15 @@ export function YearGlobe() {
           </group>
         ))}
       </Suspense>
+      <EffectComposer>
+        <Bloom
+          luminanceThreshold={0.1}
+          luminanceSmoothing={0.9}
+          intensity={1}
+          width={500}
+          height={500}
+        />
+      </EffectComposer>
     </Canvas>
   );
 }

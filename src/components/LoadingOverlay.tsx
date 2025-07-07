@@ -21,7 +21,7 @@ export default function LoadingOverlay() {
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none">
       <div className="text-white text-center">
-        <h1 className="text-2xl">Loading assets… {item}</h1>
+        <h1 className="text-4xl">Entering space… {item}</h1>
         <p>{Math.round(progress)}%</p>
       </div>
     </div>

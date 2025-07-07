@@ -1,31 +1,22 @@
-"use client";
+import { ReactElement } from "react";
+import { CelestialBody } from "./CalestialBody";
+import { CelestialBodyProps, PartialBodyProps } from "@/interfaces";
 
-import { sphericalToCartesian } from "@/utilities";
-
-export function Sun({
-  distance = 500,
-  elevation = 30,
-  azimuth = 45,
-  size = 50,
-  color = "#ffdd66",
-  intensity = 2,
-}: {
-  distance?: number;
-  elevation?: number;
-  azimuth?: number;
-  size?: number;
-  color?: string;
-  intensity?: number;
-}) {
-  const position = sphericalToCartesian(distance, elevation, azimuth);
-
-  return (
-    <group position={position}>
-      <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
-        <meshBasicMaterial color={color} toneMapped={false} />
-      </mesh>
-      <pointLight color={color} intensity={intensity} distance={0} decay={2} />
-    </group>
-  );
-}
+/**
+ * The Sun component represents a celestial body with a fixed position and properties.
+ * It uses the CelestialBody component to render itself with default values.
+ */
+export const Sun: React.FC<PartialBodyProps> = (props): ReactElement => {
+  const merged: CelestialBodyProps = {
+    distance: 500,
+    elevation: 30,
+    azimuth: 45,
+    size: 50,
+    texture: "/sun.jpeg",
+    color: "#fff700",
+    intensity: 1.5,
+    name: "Sun",
+    ...props,
+  };
+  return <CelestialBody {...merged} />;
+};
