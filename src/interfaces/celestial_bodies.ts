@@ -8,6 +8,10 @@ export interface CelestialBodyProps {
   color: string;
   intensity: number;
   name: string;
+  bumpMap?: string;
+  normalMap?: string;
+  emissiveIntensity?: number;
+  enableLight?: boolean;
 }
 export type PartialBodyProps = Partial<
   Omit<CelestialBodyProps, "texture" | "emissive" | "name">

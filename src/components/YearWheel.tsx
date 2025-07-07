@@ -85,11 +85,14 @@ export function YearGlobe() {
           <group key={p.name} position={[0, 0, 0]}>
             <OrbitingPlanet
               key={p.name}
-              radius={p.radius * 0.3}
+              name={p.name}
+              radius={p.radius * 0.8}
               speed={p.speed}
               size={p.size}
               texture={p.bumpMap}
               bumpMap={p.texture}
+              ring={p.ring}
+              emissiveIntensity={0.2}
             />
           </group>
         ))}

@@ -19,13 +19,22 @@ export const CelestialBody: React.FC<CelestialBodyProps> = ({
   color,
   intensity,
   name,
+  bumpMap,
+  normalMap,
+  emissiveIntensity,
+  enableLight = true,
 }): ReactElement => {
   const [x, y, z] = sphericalToCartesian(distance, elevation, azimuth);
-
-  const [diffTex, emisTex] = useLoader(THREE.TextureLoader, [
+  const urls = [
     texture,
-    emissive,
-  ]) as [THREE.Texture, THREE.Texture];
+    bumpMap || texture,
+    normalMap || texture,
+    emissive || texture,
+  ];
+  const [diffTex, bumpTex, normTex, emisTex] = useLoader(
+    THREE.TextureLoader,
+    urls
+  ) as [THREE.Texture, THREE.Texture, THREE.Texture, THREE.Texture];
 
   // A <group> so that the entire body can be rotated
   const group = useRef<THREE.Group>(null!);
@@ -34,18 +43,33 @@ export const CelestialBody: React.FC<CelestialBodyProps> = ({
     const geo = new THREE.SphereGeometry(size, 32, 32);
     const mat = new THREE.MeshStandardMaterial({
       map: diffTex,
-      emissiveMap: emisTex,
+      emissiveMap: emissive ? emisTex : undefined,
       emissive: new THREE.Color(color),
-      emissiveIntensity: 2,
+      emissiveIntensity: emissiveIntensity ?? 2,
       roughness: 1,
       metalness: 0,
       toneMapped: false,
+      bumpMap: bumpMap ? bumpTex : undefined,
+      normalMap: normalMap ? normTex : undefined,
+      side: THREE.DoubleSide,
     });
     const sphere = new THREE.Mesh(geo, mat);
     sphere.name = name;
     sphere.castShadow = sphere.receiveShadow = false;
     return sphere;
-  }, [diffTex, emisTex, size, color, name]);
+  }, [
+    diffTex,
+    emisTex,
+    size,
+    color,
+    name,
+    bumpMap,
+    normalMap,
+    emissiveIntensity,
+    bumpTex,
+    normTex,
+    emissive,
+  ]);
 
   useFrame((_, dt) => {
     if (group.current) group.current.rotation.y += dt * 0.02;
@@ -54,12 +78,15 @@ export const CelestialBody: React.FC<CelestialBodyProps> = ({
   return (
     <group ref={group} position={[x, y, z]} name={`${name}-group`}>
       <primitive object={mesh} />
-      <pointLight
-        color={color}
-        intensity={intensity}
-        decay={2}
-        name={`${name}-light`}
-      />
+      {enableLight && (
+        <pointLight
+          position={[0, 0, 0]}
+          color={color}
+          intensity={intensity}
+          decay={2}
+          name={`${name}-light`}
+        />
+      )}
     </group>
   );
 };
