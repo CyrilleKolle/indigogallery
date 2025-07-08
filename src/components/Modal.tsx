@@ -1,6 +1,7 @@
 "use client";
 
 import React, { JSX } from "react";
+import { AnimatePresence, cubicBezier, motion } from "framer-motion";
 
 const OVERLAY_CLASSES =
   "fixed inset-0 z-50 flex items-center justify-center pointer-events-auto";
@@ -25,13 +26,7 @@ export type ModalContainerProps<C extends keyof JSX.IntrinsicElements = "div"> =
      * Tag to render, e.g. "form" or "div".
      */
     as?: C;
-    /**
-     * Additional Tailwind classes.
-     */
     className?: string;
-    /**
-     * Content inside the container.
-     */
     children?: React.ReactNode;
   } & Omit<JSX.IntrinsicElements[C], "className" | "children">;
 
@@ -42,10 +37,18 @@ export function ModalContainer<C extends keyof JSX.IntrinsicElements = "div">({
   ...rest
 }: ModalContainerProps<C>) {
   const Tag = as || ("div" as C);
+  const MotionTag = (motion as any)[Tag] || motion.div;
   return (
-    <Tag className={`${CONTAINER_BASE} ${className}`} {...(rest as any)}>
+    <MotionTag
+      layout
+      transition={{
+        layout: { duration: 0.25, ease: "easeInOut" },
+      }}
+      className={`${CONTAINER_BASE} ${className}`}
+      {...(rest as any)}
+    >
       {children}
-    </Tag>
+    </MotionTag>
   );
 }
 
@@ -75,11 +78,22 @@ export function ModalError({
   className?: string;
 }) {
   return (
-    <p
-      className={`text-md tracking-wide text-red-600 place-self-center ${className}`}
-    >
-      {children}
-    </p>
+    <AnimatePresence mode="popLayout" initial={false}>
+      <motion.p
+        key={children?.toString()}
+        layout
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -4 }}
+        transition={{
+          duration: 0.4,
+          ease: cubicBezier(0.12, 0.77, 0.87, 0.52),
+        }}
+        className={`text-md tracking-wide text-red-600 place-self-center ${className}`}
+      >
+        {children}
+      </motion.p>
+    </AnimatePresence>
   );
 }
 
@@ -171,6 +185,11 @@ export type ModalPickListProps<T> = {
   onSelect: (item: T) => void;
   loading?: boolean;
   className?: string;
+  placeholderText?: string;
+  searchingText?: string;
+  noResultsText?: string;
+  isSearching?: boolean;
+  hasQuery?: boolean;
 };
 
 export function ModalPickList<T>({
@@ -180,16 +199,80 @@ export function ModalPickList<T>({
   onSelect,
   loading = false,
   className = "",
+  placeholderText = "Enter your secret name",
+  isSearching = false,
+  searchingText = "Scanning…",
+  noResultsText = "No user found",
+  hasQuery = false,
 }: ModalPickListProps<T>) {
+  let state: "results" | "placeholder" | "searching" | "no-results";
+  if (items.length > 0) state = "results";
+  else if (!hasQuery) state = "placeholder";
+  else if (isSearching) state = "searching";
+  else state = "no-results";
+
   return (
-    <ModalList className={className}>
-      {items.map((item) => (
-        <ModalListItem key={getKey(item)}>
-          <ModalButton onClick={() => onSelect(item)} disabled={loading}>
-            {getLabel(item)}
-          </ModalButton>
-        </ModalListItem>
-      ))}
-    </ModalList>
+    <motion.ul
+      className={`space-y-2 ${className}`}
+      layout
+      transition={{
+        layout: { duration: 0.4, ease: cubicBezier(0.12, 0.77, 0.87, 0.52) },
+      }}
+      role="list"
+      aria-label="Pick a user"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {state === "placeholder" && (
+          <motion.li
+            key="placeholder"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            layout
+          >
+            <ModalButton disabled>{placeholderText}</ModalButton>
+          </motion.li>
+        )}
+
+        {state === "searching" && (
+          <motion.li
+            key="searching"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            layout
+          >
+            <ModalButton disabled>{searchingText}</ModalButton>
+          </motion.li>
+        )}
+        {state === "no-results" && (
+          <motion.li
+            key="no-results"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            layout
+          >
+            <ModalButton disabled>{noResultsText}</ModalButton>
+          </motion.li>
+        )}
+        {state === "results" &&
+          items.map((item) => (
+            <motion.li
+              key={getKey(item)}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              layout
+            >
+              <ModalButton onClick={() => onSelect(item)} disabled={loading}>
+                {loading
+                  ? `Sending code to ${getLabel(item)}…`
+                  : getLabel(item)}
+              </ModalButton>
+            </motion.li>
+          ))}
+      </AnimatePresence>
+    </motion.ul>
   );
 }

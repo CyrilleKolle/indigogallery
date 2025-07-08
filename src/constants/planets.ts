@@ -57,7 +57,7 @@ export const PLANETS: PlanetSpec[] = [
   {
     name: "Saturn",
     radius: 290,
-    speed: 0.1,
+    speed: 0.12,
     size: 14,
     color: "#d8c47a",
     texture: "/saturn.jpg",
@@ -74,7 +74,7 @@ export const PLANETS: PlanetSpec[] = [
   {
     name: "Uranus",
     radius: 350,
-    speed: 0.07,
+    speed: 0.17,
     size: 12,
     color: "#94e0e9",
     texture: "/uranus.jpg",
@@ -89,7 +89,7 @@ export const PLANETS: PlanetSpec[] = [
   {
     name: "Neptune",
     radius: 410,
-    speed: 0.05,
+    speed: 0.15,
     size: 12,
     color: "#4059ad",
     texture: "/neptune.jpg",

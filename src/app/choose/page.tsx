@@ -18,30 +18,62 @@ interface Member {
 export default function Choose() {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const router = useRouter();
+  const [isSearchingMember, setIsSearchingMember] = useState(false);
 
-  // query members as user types
   useEffect(() => {
-    if (q.length < 2) return setResults([]);
+    if (q.length < 2) {
+      if (results.length) setResults([]);
+      setIsSearchingMember(false);
+      return;
+    }
+
+    setIsSearchingMember(true);
     const id = setTimeout(async () => {
-      const res = await fetch("/api/member-search?q=" + encodeURIComponent(q));
-      console.log("searching for", q);
-      console.log("res", res);
-      if (res.ok) setResults(await res.json());
+      try {
+        const res = await fetch(
+          "/api/member-search?q=" + encodeURIComponent(q)
+        );
+        if (res.ok) {
+          const data: Member[] = await res.json();
+          setResults((prev) => {
+            if (prev.length === data.length) {
+              const same = data.every((m, i) => m.id === prev[i].id);
+              if (same) return prev;
+            }
+            return data;
+          });
+        } else {
+          setResults([]);
+        }
+      } catch {
+        setResults([]);
+      } finally {
+        setIsSearchingMember(false);
+      }
     }, 200);
-    return () => clearTimeout(id);
+
+    return () => {
+      clearTimeout(id);
+      setIsSearchingMember(false);
+    };
   }, [q]);
 
   const pick = async (m: Member) => {
-    setLoading(true);
-    const res = await fetch("/api/send-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ memberId: m.id }),
-    });
-    if (res.ok) router.push(`/verify?m=${m.id}`);
-    setLoading(false);
+    setIsSending(true);
+    try {
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId: m.id }),
+      });
+      if (res.ok) router.push(`/verify?m=${m.id}`);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -51,9 +83,9 @@ export default function Choose() {
         <ModalInput
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Start typing your name…"
+          placeholder="Write your secret name..."
           autoFocus
-          disabled={loading}
+          disabled={isSending}
           autoComplete="off"
         />
         <ModalPickList
@@ -61,6 +93,12 @@ export default function Choose() {
           onSelect={pick}
           getKey={(m: Member) => m.id}
           getLabel={(m: Member) => m.displayName}
+          loading={isSending}
+          placeholderText="Enter your secret name"
+          isSearching={isSearchingMember}
+          searchingText="Scanning"
+          noResultsText="No user found"
+          hasQuery={q.length > 2}
         />
       </ModalContainer>
     </ModalOverlay>
