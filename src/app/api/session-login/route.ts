@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       expiresIn: TWO_WEEKS_MS,
     });
 
-    const res = NextResponse.json({ ok: true });
+    const res = NextResponse.json({ ok: true, target: "/" }, { status: 200 });
     res.cookies.set({
       name: "__session",
       value: sessionCookie,

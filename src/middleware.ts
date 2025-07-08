@@ -13,7 +13,7 @@ const jwks = createRemoteJWKSet(new URL(jwksUri));
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
-  const url = req.nextUrl.clone(); // we’ll mutate `url.pathname` for redirects
+  const url = req.nextUrl.clone(); // I mutate the `url.pathname` for redirects
   const preAuth = req.cookies.get("preAuth");
   const validSess = await hasValidSession({
     projectId,
