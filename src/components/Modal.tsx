@@ -42,7 +42,7 @@ export function ModalContainer<C extends keyof JSX.IntrinsicElements = "div">({
     <MotionTag
       layout
       transition={{
-        layout: { duration: 0.25, ease: "easeInOut" },
+        layout: { duration: 0.25, ease: cubicBezier(0.5, 0.62, 0.62, 0.5) },
       }}
       className={`${CONTAINER_BASE} ${className}`}
       {...(rest as any)}
@@ -87,7 +87,7 @@ export function ModalError({
         exit={{ opacity: 0, y: -4 }}
         transition={{
           duration: 0.4,
-          ease: cubicBezier(0.12, 0.77, 0.87, 0.52),
+          ease: cubicBezier(0.5, 0.62, 0.62, 0.5),
         }}
         className={`text-md tracking-wide text-red-600 place-self-center ${className}`}
       >
@@ -216,7 +216,7 @@ export function ModalPickList<T>({
       className={`space-y-2 ${className}`}
       layout
       transition={{
-        layout: { duration: 0.4, ease: cubicBezier(0.12, 0.77, 0.87, 0.52) },
+        layout: { duration: 0.4, ease: cubicBezier(0.5, 0.62, 0.62, 0.5) },
       }}
       role="list"
       aria-label="Pick a user"

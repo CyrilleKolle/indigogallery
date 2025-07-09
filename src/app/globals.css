@@ -37,3 +37,20 @@ body {
   font-size: 1.5rem;
   z-index: 9999;
 }
+
+@layer utilities {
+  .rainbow-ring {
+    background: conic-gradient(
+      red,
+      orange,
+      yellow,
+      green,
+      cyan,
+      blue,
+      violet,
+      red
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent 80%, black 81%);
+    mask: radial-gradient(farthest-side, transparent 80%, black 81%);
+  }
+}
