@@ -21,6 +21,7 @@ interface GalleryItemProps {
   year: string;
   expanded: boolean;
   hovered: boolean;
+  isDimmed: boolean;
   setHoveredId: React.Dispatch<React.SetStateAction<string | null>>;
   onToggleExpand: (file: string) => void;
   onImageLoad: () => void;
@@ -144,6 +145,7 @@ const VirtualizedGallery: React.FC<VirtualizedGalleryProps> = ({
                       onImageLoad={onImageLoad}
                       hovered={hoveredId === file}
                       setHoveredId={setHoveredId}
+                      isDimmed={hoveredId !== file && !expandedId}
                     />
                   </div>
                 );
@@ -169,6 +171,7 @@ export function GalleryItem({
   year,
   expanded,
   hovered,
+  isDimmed,
   setHoveredId,
   onToggleExpand,
   onImageLoad,
@@ -201,6 +204,11 @@ export function GalleryItem({
   const imgVariants = {
     rest: { scale: 1, rotate: 0 },
     hover: { scale: 1.15, rotate: 0 },
+  };
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 0.25 },
   };
   return (
     <motion.div
@@ -244,15 +252,34 @@ export function GalleryItem({
           alt={`Photo from ${year} – ${file.replace(/\.[^/.]+$/, "")}`}
           width={200}
           height={200}
-          className="w-full h-full object-cover pointer-events-none"
+          className={clsx("w-full h-full object-cover pointer-events-none")}
           loading="lazy"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
           onLoad={onImageLoad}
         />
       </motion.div>
+      <AnimatePresence>
+        {!expanded && isDimmed && (
+          <motion.div
+            key="dim"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: [0.5, 0.62, 0.62, 0.5],
+              type: "tween",
+            }}
+            className={IMAGE_OVERLAY}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
 
 export const MemoizedGalleryItem = React.memo(GalleryItem);
 MemoizedGalleryItem.displayName = "MemoizedGalleryItem";
+
+
+const IMAGE_OVERLAY = clsx("absolute inset-0 bg-black/60 z-90 pointer-events-none backdrop-saturate-20")

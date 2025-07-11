@@ -70,6 +70,7 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
                 onImageLoad={handleImageLoad}
                 hovered={hoveredId === file}
                 setHoveredId={setHoveredId}
+                isDimmed={Boolean(expandedId) && hoveredId !== file}
               />
             ))}
           </motion.div>
