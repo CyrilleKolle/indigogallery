@@ -26,11 +26,6 @@ interface GalleryItemProps {
   onImageLoad: () => void;
 }
 
-interface HeaderProps {
-  year: string;
-  onClose: () => void;
-}
-
 interface VirtualizedGalleryProps {
   year: string;
   files: string[];
@@ -39,33 +34,6 @@ interface VirtualizedGalleryProps {
   setHoveredId: React.Dispatch<React.SetStateAction<string | null>>;
   onToggleExpand: (file: string) => void;
   onImageLoad: () => void;
-}
-
-/**
- * Header component for the Year Gallery.
- * Displays the year and a close button.
- * @param param0
- * @returns
- */
-export function Header({ year, onClose }: HeaderProps) {
-  return (
-    <div className="flex flex-row items-center justify-center gap-6 w-full max-w-3xl">
-      <motion.h1 className={TITLE_STYLE} layout="size">
-        <span className="origin-center group-hover:scale-125">[</span>
-        <span className="origin-center group-hover:scale-90">Year {year}</span>
-        <span className="origin-center group-hover:scale-125">]</span>
-      </motion.h1>
-      <motion.button
-        className={BUTTON_STYLE}
-        onClick={onClose}
-        whileTap={{ scale: 0.95 }}
-      >
-        <span className="origin-center group-hover:scale-125">[</span>
-        <span className="origin-center group-hover:scale-90">close</span>
-        <span className="origin-center group-hover:scale-125">]</span>
-      </motion.button>
-    </div>
-  );
 }
 
 /**
@@ -111,7 +79,11 @@ export const LoadingImagesOverlay = () => {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -10, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.5, 0.62, 0.62, 0.5] }}
+              transition={{
+                duration: 0.4,
+                ease: [0.5, 0.62, 0.62, 0.5],
+                type: "tween",
+              }}
               className="text-2xl tracking-wide text-white"
             >
               {messages[idx]}
@@ -224,8 +196,12 @@ export function GalleryItem({
     hovered && !expanded
       ? "0px 16px 24px rgba(0,0,0,0.18)"
       : "0px 4px  6px  rgba(0,0,0,0.12)";
-  const cardScale = hovered && !expanded ? 1.08 : 1;
+  const cardScale = hovered && !expanded ? 1.03 : 1;
 
+  const imgVariants = {
+    rest: { scale: 1, rotate: 0 },
+    hover: { scale: 1.15, rotate: 0 },
+  };
   return (
     <motion.div
       ref={cardRef}
@@ -243,28 +219,40 @@ export function GalleryItem({
         "relative overflow-hidden rounded-lg cursor-pointer",
         expanded ? "z-20" : "shadow-lg"
       )}
-      style={expanded ? { gridColumn: "span 3", gridRow: "span 3" } : {}}
-      transition={{ duration: 0.18, ease: [0.5, 0.62, 0.62, 0.5] }}
+      style={expanded ? { gridColumn: "span 3", gridRow: "span 4" } : {}}
+      transition={{
+        duration: 0.2,
+        ease: [0.5, 0.62, 0.62, 0.5],
+        type: "tween",
+      }}
+      whileHover={expanded ? "rest" : "hover"}
+      initial="rest"
+      whileTap={{ scale: 0.95 }}
     >
-      <Image
-        src={`/years/${year}/${file}`}
-        alt={`Photo from ${year} – ${file.replace(/\.[^/.]+$/, "")}`}
-        width={200}
-        height={200}
-        style={{ objectFit: "cover" }}
+      <motion.div
+        variants={imgVariants}
         className="w-full h-full"
-        loading="lazy"
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-        onLoad={onImageLoad}
-      />
+        style={expanded ? { originX: 0.5, originY: 0.5 } : {}}
+        transition={
+          expanded
+            ? { duration: 0.4, ease: [0.5, 0.62, 0.62, 0.5], type: "tween" }
+            : {}
+        }
+      >
+        <Image
+          src={`/years/${year}/${file}`}
+          alt={`Photo from ${year} – ${file.replace(/\.[^/.]+$/, "")}`}
+          width={200}
+          height={200}
+          className="w-full h-full object-cover pointer-events-none"
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+          onLoad={onImageLoad}
+        />
+      </motion.div>
     </motion.div>
   );
 }
 
 export const MemoizedGalleryItem = React.memo(GalleryItem);
-
-const TITLE_STYLE =
-  "group flex flex-row gap-2 text-lg text-white md:text-2xl tracking-wide text-center select-none transition-colors duration-150 hover:text-indigo-300";
-
-const BUTTON_STYLE =
-  "group inline-flex items-center gap-2 text-lg text-white md:text-2xl tracking-wide uppercase transition-colors duration-150 hover:text-indigo-300";
+MemoizedGalleryItem.displayName = "MemoizedGalleryItem";

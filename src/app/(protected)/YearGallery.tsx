@@ -5,7 +5,6 @@ import React, { useState, useCallback } from "react";
 import { motion, LayoutGroup } from "framer-motion";
 import { useGlobeStore } from "@/store/useGlobeStore";
 import {
-  Header,
   LoadingImagesOverlay,
   MemoizedGalleryItem,
   VirtualizedGallery,
@@ -20,22 +19,13 @@ interface YearGalleryProps {
 }
 
 const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
-  const router = useRouter();
-  const reset = useGlobeStore((s) => s.reset);
-
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-
   const [loadedCount, setLoadedCount] = useState(0);
-
-  const handleClose = () => {
-    reset();
-    router.back();
-  };
 
   const toggleExpand = (file: string) => {
     setExpandedId((prev) => (prev === file ? null : file));
-    setHoveredId(null); // always clear hover when any card toggles
+    setHoveredId(null);
   };
   const handleImageLoad = useCallback(() => {
     setLoadedCount((c) => c + 1);
@@ -50,10 +40,12 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.5, ease: [0.5, 0.62, 0.62, 0.5] }}
+      transition={{
+        duration: 0.5,
+        ease: [0.5, 0.62, 0.62, 0.5],
+        type: "tween",
+      }}
     >
-      <Header year={year} onClose={handleClose} />
-
       {useVirtual ? (
         //TODO: Implement VirtualizedGallery as it currently does not animate properly
         <VirtualizedGallery
@@ -100,7 +92,7 @@ export { YearGallery };
 export default YearGallery;
 
 const SECTION_BASE =
-  "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen overflow-y-auto";
+  "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen overflow-y-auto top-12";
 
 const GALLERY_GRID =
   "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full max-w-6xl bg-gray-900 p-4 rounded-lg shadow-lg opacity-90 transition-opacity duration-200 overflow-visible";
