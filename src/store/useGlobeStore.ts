@@ -12,6 +12,7 @@ interface GlobeState {
   camera?: PerspectiveCamera;
   controls?: ThreeOrbitControls;
   savedPose?: Pose;
+  focusedYear?: number;
 
   /** Register live camera & controls */
   register: (cam: PerspectiveCamera, ctrls: ThreeOrbitControls) => void;
@@ -45,6 +46,7 @@ export const useGlobeStore = create<GlobeState>()(
           pos: camera.position.clone(),
           target: controls.target.clone(),
         },
+        focusedYear: year,
       });
 
       const camEnd = vec.clone().multiplyScalar(radius * 1.01);

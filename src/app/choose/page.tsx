@@ -96,7 +96,7 @@ export default function Choose() {
           loading={isSending}
           placeholderText="Enter your secret name"
           isSearching={isSearchingMember}
-          searchingText="Scanning"
+          searchingText="Scanning..."
           noResultsText="No user found"
           hasQuery={q.length > 2}
         />

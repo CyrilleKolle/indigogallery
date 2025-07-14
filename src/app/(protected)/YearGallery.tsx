@@ -96,4 +96,4 @@ const SECTION_BASE =
   "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen overflow-y-auto top-12";
 
 const GALLERY_GRID =
-  "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full max-w-6xl bg-gray-900 p-4 rounded-lg shadow-lg opacity-90 transition-opacity duration-200 overflow-visible";
+  "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full max-w-6xl bg-gray-900 p-4 rounded-lg shadow-lg opacity-95 transition-opacity duration-200 overflow-visible";

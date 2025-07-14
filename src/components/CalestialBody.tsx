@@ -3,6 +3,7 @@ import { useLoader, useFrame } from "@react-three/fiber";
 import { type ReactElement, useMemo, useRef } from "react";
 import { sphericalToCartesian } from "@/utilities";
 import { CelestialBodyProps } from "@/interfaces";
+import "@react-three/fiber";
 
 /**
  * The CelestialBody component represents a spherical celestial body in 3D space.

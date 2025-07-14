@@ -281,5 +281,6 @@ export function GalleryItem({
 export const MemoizedGalleryItem = React.memo(GalleryItem);
 MemoizedGalleryItem.displayName = "MemoizedGalleryItem";
 
-
-const IMAGE_OVERLAY = clsx("absolute inset-0 bg-black/60 z-90 pointer-events-none backdrop-saturate-20")
+const IMAGE_OVERLAY = clsx(
+  "absolute inset-0 bg-black/60 z-90 pointer-events-none backdrop-saturate-20"
+);

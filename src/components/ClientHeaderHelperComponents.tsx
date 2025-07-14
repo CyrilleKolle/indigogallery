@@ -53,13 +53,19 @@ export const BracketButton = memo(
 BracketButton.displayName = "BracketButton";
 
 interface GalleryControlsProps {
-  year: number;
+  galleryControlLabel: string;
   onClose(): void;
   custom?: number;
+  closeButtonLabel?: string;
 }
 
 export const GalleryControls = memo(
-  ({ year, onClose, custom }: GalleryControlsProps) => (
+  ({
+    galleryControlLabel,
+    onClose,
+    custom,
+    closeButtonLabel,
+  }: GalleryControlsProps) => (
     <motion.div
       className="flex items-center gap-6"
       custom={custom}
@@ -71,12 +77,12 @@ export const GalleryControls = memo(
       <motion.h1 layout="position" className={TITLE_STYLE}>
         <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>[</span>
         <span className={clsx(HOVER_SPAN, "group-hover:scale-90")}>
-          year&nbsp;{year}
+          {galleryControlLabel}
         </span>
         <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>]</span>
       </motion.h1>
 
-      <BracketButton label="close" onClick={onClose} />
+      <BracketButton label={closeButtonLabel ?? "close"} onClick={onClose} />
     </motion.div>
   )
 );
