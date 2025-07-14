@@ -1,9 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React, { useState, useCallback } from "react";
 import { motion, LayoutGroup } from "framer-motion";
-import { useGlobeStore } from "@/store/useGlobeStore";
 import {
   LoadingImagesOverlay,
   MemoizedGalleryItem,

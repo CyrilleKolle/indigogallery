@@ -206,10 +206,6 @@ export function GalleryItem({
     hover: { scale: 1.15, rotate: 0 },
   };
 
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 0.25 },
-  };
   return (
     <motion.div
       ref={cardRef}

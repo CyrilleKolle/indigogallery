@@ -120,7 +120,7 @@ export function LabeledGlobe({ radius = 4 }: { radius?: number }) {
             outlineColor="black"
             outlineOpacity={0.8}
             font="/bytebounce/ByteBounce.ttf"
-            /* @ts-ignore – Troika supports it even though the d.ts doesn’t */
+            /* @ts-expect-error: Troika Text supports curveRadius even though it is not in the type definitions */
             curveRadius={radius * -1.11}
           >
             {year}
@@ -128,7 +128,7 @@ export function LabeledGlobe({ radius = 4 }: { radius?: number }) {
         </group>
       );
     });
-  }, [textures, radius, handleClick, globeLocked]);
+  }, [textures, radius, handleClick]);
 
   return (
     <group ref={globeRef} onPointerMissed={() => router.push("/")}>
