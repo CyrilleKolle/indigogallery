@@ -85,7 +85,7 @@ export const LoadingImagesOverlay = () => {
                 ease: [0.5, 0.62, 0.62, 0.5],
                 type: "tween",
               }}
-              className="text-2xl tracking-wide text-white"
+              className="text-2xl tracking-wide text-gray-300"
             >
               {messages[idx]}
             </motion.span>
@@ -199,7 +199,7 @@ export function GalleryItem({
     hovered && !expanded
       ? "0px 16px 24px rgba(0,0,0,0.18)"
       : "0px 4px  6px  rgba(0,0,0,0.12)";
-  const cardScale = hovered && !expanded ? 1.03 : 1;
+  const cardScale = hovered && !expanded ? 1 : 1;
 
   const imgVariants = {
     rest: { scale: 1, rotate: 0 },
@@ -223,7 +223,7 @@ export function GalleryItem({
         "relative overflow-hidden rounded-lg cursor-pointer",
         expanded ? "z-20" : "shadow-lg"
       )}
-      style={expanded ? { gridColumn: "span 3", gridRow: "span 4" } : {}}
+      style={expanded ? { gridColumn: "span 3", gridRow: "span 3" } : {}}
       transition={{
         duration: 0.2,
         ease: [0.5, 0.62, 0.62, 0.5],

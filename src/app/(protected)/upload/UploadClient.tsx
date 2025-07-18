@@ -19,7 +19,7 @@ import {
 } from "./UploadClientComponents";
 
 const SECTION_BASE =
-  "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen h-fit my-auto overflow-y-auto top-12";
+  "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen h-fit my-auto overflow-y-auto";
 
 const SECTION_ADDITIONAL =
   "w-full max-w-6xl mx-auto bg-gray-900/90 p-4 rounded-xl shadow-lg opacity-95 transition-opacity duration-200 overflow-visible shadow-cyan-50/5";
@@ -93,7 +93,8 @@ export default function UploadClient() {
                        file:mr-4 file:py-2 file:px-4
                        file:rounded-lg file:border-0
                        file:text-xl file:font-semibold
-                       file:bg-sky-900 file:text-white
+                       file:bg-sky-900 file:text-gray-300
+                       file:transition-colors file:duration-200
                        hover:file:bg-cyan-400 hover:file:text-indigo-900"
           errors={errors.files ? errors.files.message : null}
           inputProps={{ multiple: true, accept: "image/*" }}

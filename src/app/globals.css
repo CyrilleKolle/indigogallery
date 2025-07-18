@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --app-header-h: 64px;
+  --app-header-gap: 10px;
+  --app-bottom-gap: 64px;
 }
 
 @theme inline {
@@ -52,5 +55,11 @@ body {
     );
     -webkit-mask: radial-gradient(farthest-side, transparent 80%, black 81%);
     mask: radial-gradient(farthest-side, transparent 80%, black 81%);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --app-header-h: 56px;
   }
 }
