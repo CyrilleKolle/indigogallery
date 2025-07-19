@@ -6,6 +6,8 @@ import { FixedSizeGrid as Grid } from "react-window";
 import React, { useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import NextImage from "next/image";
 
 const AutoSizer = dynamic(() => import("react-virtualized-auto-sizer"), {
   ssr: false,
@@ -16,6 +18,7 @@ const SCROLL_OPTS: ScrollIntoViewOptions = {
   block: "center",
 };
 
+const MotionImage = motion(NextImage);
 interface GalleryItemProps {
   file: string;
   year: string;
@@ -25,6 +28,7 @@ interface GalleryItemProps {
   setHoveredId: React.Dispatch<React.SetStateAction<string | null>>;
   onToggleExpand: (file: string) => void;
   onImageLoad: () => void;
+  openImageOverlay?: (file: string) => void;
 }
 
 interface VirtualizedGalleryProps {
@@ -35,6 +39,7 @@ interface VirtualizedGalleryProps {
   setHoveredId: React.Dispatch<React.SetStateAction<string | null>>;
   onToggleExpand: (file: string) => void;
   onImageLoad: () => void;
+  openImageOverlay?: (file: string) => void;
 }
 
 /**
@@ -175,6 +180,7 @@ export function GalleryItem({
   setHoveredId,
   onToggleExpand,
   onImageLoad,
+  openImageOverlay,
 }: GalleryItemProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
 
@@ -243,17 +249,52 @@ export function GalleryItem({
             : {}
         }
       >
-        <Image
+        <MotionImage
           src={`/years/${year}/${file}`}
           alt={`Photo from ${year} – ${file.replace(/\.[^/.]+$/, "")}`}
-          width={200}
-          height={200}
+          width={300}
+          height={300}
           className={clsx("w-full h-full object-cover pointer-events-none")}
           loading="lazy"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
           onLoad={onImageLoad}
+          layoutId={`photo-${file}`}
         />
       </motion.div>
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            key="photo-bar"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              duration: 0.25,
+              ease: [0.4, 0.0, 0.2, 1],
+              type: "tween",
+            }}
+            className="absolute bottom-0 left-0 right-0 flex items-center justify-between
+                   bg-gray-900/40 backdrop-blur-sm text-gray-300 text-sm
+                   px-3 py-2 pointer-events-auto rounded-b-lg"
+          >
+            <span className="text-lg font-medium">
+              {lookupPhotographer(file) ?? "A loved one took the image!"}
+            </span>
+            <button
+              type="button"
+              aria-label="View fullscreen"
+              className="p-1 rounded-md hover:bg-white/10 focus-visible:ring-2
+                     focus-visible:ring-offset-2 focus-visible:ring-cyan-400"
+              onClick={(e) => {
+                e.stopPropagation();
+                openImageOverlay?.(file);
+              }}
+            >
+              <ArrowsPointingOutIcon className="h-5 w-5" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {!expanded && isDimmed && (
           <motion.div
@@ -280,3 +321,11 @@ MemoizedGalleryItem.displayName = "MemoizedGalleryItem";
 const IMAGE_OVERLAY = clsx(
   "absolute inset-0 bg-black/60 z-90 pointer-events-none backdrop-saturate-20"
 );
+
+function lookupPhotographer(file: string): string | undefined {
+  // crude example: “john-doe__IMG123.jpg”  →  “John Doe”
+  const match = file.match(/^([\w-]+?)__/);
+  return match
+    ? match[1].replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : undefined;
+}

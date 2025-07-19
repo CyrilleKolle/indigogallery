@@ -11,6 +11,7 @@ import {
 import { cn } from "@/utilities";
 import Banner from "@/components/GalleryBanner";
 import { useVisibility } from "@/store";
+import { FullscreenViewer } from "./FullscreenViewer";
 
 const VIRTUALIZE_THRESHOLD = 220;
 const INITIAL_LOAD_TARGET = 5;
@@ -27,6 +28,7 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [loadedCount, setLoadedCount] = useState(0);
+  const [overlayId, setOverlayId] = useState<string | null>(null);
 
   const mainRoot =
     typeof window !== "undefined"
@@ -50,6 +52,27 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
       sectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [sectionRef]);
+
+  const handleOpenImageInOverlay = useCallback(
+    (file: string) => {
+      setOverlayId(file);
+      if (sectionRef.current) {
+        sectionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    [sectionRef]
+  );
+
+  const handleOnCloseOverlay = useCallback(
+    (event?: React.MouseEvent) => {
+      event?.stopPropagation();
+      setOverlayId(null);
+      if (sectionRef.current) {
+        sectionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    [sectionRef]
+  );
 
   const showLoading = loadedCount < Math.min(INITIAL_LOAD_TARGET, files.length);
   const useVirtual = files.length > VIRTUALIZE_THRESHOLD;
@@ -111,6 +134,7 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
                       hovered={hoveredId === file}
                       setHoveredId={setHoveredId}
                       isDimmed={Boolean(expandedId) && hoveredId !== file}
+                      openImageOverlay={handleOpenImageInOverlay}
                     />
                   ))}
                 </motion.div>
@@ -119,6 +143,12 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
             {showLoading && <LoadingImagesOverlay />}
           </motion.section>
         </motion.div>
+        <FullscreenViewer
+          key="fullscreen-viewer"
+          file={overlayId}
+          year={year}
+          onClose={handleOnCloseOverlay}
+        />
       </LayoutGroup>
     </AnimatePresence>
   );
@@ -137,7 +167,7 @@ export default YearGallery;
 const GALLERY_CONTAINER = cn(
   "w-full mx-auto max-w-6xl flex flex-col items-center relative",
   "z-90 shadow-cyan-50/5 shadow-xl shadow-lg bg-gray-900/90 rounded-2xl",
-  "transition-opacity duration-200 mt-1 h-[85vh] overflow-y-auto"
+  "transition-opacity duration-200 mt-1 max-h-[85vh] overflow-y-auto h-fit my-auto"
 );
 
 const SECTION_BASE = cn(

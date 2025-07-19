@@ -45,7 +45,7 @@ const HEADER_STYLE = clsx(
   "fixed inset-x-0 top-0 z-90 w-full pt-[env(safe-area-inset-top)]"
 );
 const MAIN_STYLE = clsx(
-  "absolute inset-x-0 bottom-0 overflow-y-auto overscroll-contain"
+  "absolute inset-x-0 bottom-0 overflow-y-auto overscroll-contain flex flex-col",
 );
 
 const HEADER_TOP_STYLE =
