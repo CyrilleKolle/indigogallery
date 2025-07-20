@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export interface PageWrapperProps {
   children: React.ReactNode;
@@ -89,43 +90,18 @@ export const LabelComponent: React.FC<LabelComponentProps> = ({
   );
 };
 
-export const CancelSvg = ({ strokeColor = "currentColor" }) => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M18 6L6 18"
-      stroke={strokeColor}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M6 6L18 18"
-      stroke={strokeColor}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 export interface RemoveButtonProps {
   onClick: () => void;
   className?: string;
 }
 export const RemoveButton: React.FC<RemoveButtonProps> = ({
   onClick,
-  className = "absolute bottom-2 right-2 bg-sky-900 text-gray-300 rounded-full p-1 hover:bg-cyan-400 transition-colors text-gray-300 hover:text-indigo-900",
+  className = "absolute bottom-1 md:bottom-2 right-1 md:bottom-2 bg-sky-900 text-gray-300 rounded-full p-1 hover:bg-cyan-400 transition-colors text-gray-300 hover:text-indigo-900",
 }) => {
   return (
     <button type="button" onClick={onClick} className={className}>
       <span className="sr-only">Remove</span>
-      <CancelSvg strokeColor="currentColor" />
+      <XMarkIcon className="w-4 h-4 md:w-6 md:h-6" aria-hidden="true" />
     </button>
   );
 };
