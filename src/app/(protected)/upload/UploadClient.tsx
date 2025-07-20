@@ -18,13 +18,24 @@ import {
   UploadForm,
 } from "./UploadClientComponents";
 
-const SECTION_BASE =
-  "py-8 px-4 md:px-8 flex flex-col items-center gap-8 z-50 fixed inset-0 pointer-events-auto max-h-screen h-fit my-auto overflow-y-auto";
-
-const SECTION_ADDITIONAL =
-  "w-full max-w-6xl mx-auto bg-gray-900/90 p-4 rounded-xl shadow-lg opacity-95 transition-opacity duration-200 overflow-visible shadow-cyan-50/5";
-const GALLERY_GRID =
-  "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full  transition-opacity duration-200";
+  const SECTION_BASE = cn(
+    "py-6 px-3 md:py-8 md:px-8 flex flex-col items-center gap-2 md:gap-8",
+    "z-50 fixed inset-0 pointer-events-auto",
+    "h-fit lg:h-fit my-auto overflow-y-auto",
+    "place-content-center justify-stretch"
+  );
+const SECTION_ADDITIONAL = cn(
+  "w-full max-w-[90vw] lg:max-w-4xl xl:max-w-6xl mx-auto bg-gray-900/90 p-3 md:p-4 rounded-xl",
+  "shadow-lg opacity-95 transition-opacity duration-200 overflow-visible shadow-cyan-50/5"
+);
+const GALLERY_GRID = cn(
+  "grid grid-flow-col auto-cols-[minmax(theme(width.16),1fr)]",
+  "sm:grid-flow-row sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+  "gap-1 sm:gap-2 md:gap-3 lg:gap-4 xl:gap-5",
+  "overflow-x-auto overflow-y-hidden",
+  "sm:overflow-x-hidden sm:overflow-y-auto sm:max-h-80",
+  "w-full transition-opacity duration-200 scrollbar-thin scrollbar-thumb-gray-700"
+);
 
 const TODAY_YEAR = new Date().getFullYear().toString();
 
@@ -92,7 +103,7 @@ export default function UploadClient() {
           inputClassName="block w-full text-lg tracking-wider text-gray-300 
                        file:mr-4 file:py-2 file:px-4
                        file:rounded-lg file:border-0
-                       file:text-xl file:font-semibold
+                       file:text-base md:file:text-xl file:font-semibold
                        file:bg-sky-900 file:text-gray-300
                        file:transition-colors file:duration-200
                        hover:file:bg-cyan-400 hover:file:text-indigo-900"
@@ -108,9 +119,10 @@ export default function UploadClient() {
                     src={p.url}
                     alt={p.file.name}
                     className="object-cover w-full h-full object-cover pointer-events-none"
-                    width={300}
-                    height={300}
+                    width={64}
+                    height={64}
                     key={p.id}
+                    sizes="(max-width: 640px) 20vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, (max-width: 1536px) 15vw"
                   />
                   <RemoveButton
                     key={`Remove-${p.id}`}

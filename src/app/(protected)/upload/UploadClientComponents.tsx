@@ -43,7 +43,7 @@ export const UploadForm: React.FC<UploadFormProps> = ({
       method="post"
       name="upload-form"
       target="_self"
-      className="flex flex-col items-center gap-6 w-full max-w-4xl"
+      className="flex flex-col items-center gap-8 w-full max-w-md md:max-w-4xl lg:max-w-5xl mx-auto"
       onSubmit={onSubmit}
     >
       {children}
@@ -64,12 +64,12 @@ export interface LabelComponentProps {
 
 export const LabelComponent: React.FC<LabelComponentProps> = ({
   label,
-  labelClassName = "block mb-1 font-medium text-2xl tracking-wide text-gray-300",
+  labelClassName = "block mb-1 font-medium text-lg md:text-2xl tracking-wide text-gray-300",
   errors,
   inputRegister,
   inputPlaceholder = "",
   inputType = "text",
-  inputClassName = "w-full p-2 text-xl tracking-wide rounded-lg bg-gray-800 border border-sky-700 focus:outline-none focus:ring-2 focus:ring-cyan-400",
+  inputClassName = "w-full p-2 text-base md:text-xl tracking-wide rounded-lg bg-gray-800 border border-sky-700 focus:outline-none focus:ring-2 focus:ring-cyan-400",
   inputProps,
 }) => {
   return (
@@ -164,7 +164,7 @@ export const SubmitSection: React.FC<SubmitSectionProps> = ({
       <button
         type="submit"
         disabled={valid || isPending}
-        className="px-6 py-3 rounded-lg bg-sky-700 hover:bg-cyan-400 disabled:bg-gray-700 hover:text-indigo-700 disabled:cursor-not-allowed hover:disabled:text-gray-400 disabled:text-gray-500
+        className="px-4 md:px-6 py-3 rounded-lg bg-sky-700 hover:bg-cyan-400 disabled:bg-gray-700 hover:text-indigo-700 disabled:cursor-not-allowed hover:disabled:text-gray-400 disabled:text-gray-500
                      transition-colors font-semibold tracking-wide"
       >
         {isPending ? "Uploading…" : "Upload"}
