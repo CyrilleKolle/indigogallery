@@ -13,6 +13,8 @@ import {
   BrandHeading,
   GalleryControls,
 } from "./ClientHeaderHelperComponents";
+import { HamburgerIcon } from "./HamburgerIcon";
+import { MobileMenu } from "./MobileMenu";
 
 function ClientHeaderComponent() {
   const router = useRouter();
@@ -23,6 +25,7 @@ function ClientHeaderComponent() {
   const [showHeader, setShowHeader] = useState(false);
   const focused = useGlobeStore((s) => s.mode);
   const year = useGlobeStore((s) => s.focusedYear);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isGalleryOpen = focused === "focused";
   const direction = isGalleryOpen ? 1 : -1;
@@ -41,7 +44,7 @@ function ClientHeaderComponent() {
   }, [active, progress]);
 
   const handleUpload = useCallback(() => {
-    setIsUploadButtonPressed(true);
+    setIsUploadButtonPressed((prev) => !prev);
     router.push("/upload");
   }, [setIsUploadButtonPressed, router]);
 
@@ -61,55 +64,83 @@ function ClientHeaderComponent() {
   }, [reset, router]);
 
   const handleCloseUpload = useCallback(() => {
-    setIsUploadButtonPressed(false);
-  }, [setIsUploadButtonPressed]);
+    setIsUploadButtonPressed((prev) => !prev);
+    router.back();
+  }, [setIsUploadButtonPressed, router]);
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <LayoutGroup>
-        <motion.header
-          layout
-          variants={headerVariants}
-          className={HEADER_STYLE}
-          animate={showHeader ? "visible" : "hidden"}
-          transition={{
-            duration: 0.8,
-            ease: [0.5, 0.62, 0.62, 0.5],
-            type: "tween",
-          }}
-        >
-          <motion.div className={INNER_HEADER_STYLE} layout>
-            <AnimatePresence mode="wait" custom={direction}>
-              {isUploadButtonPressed ? (
-                <GalleryControls
-                  key="uploading"
-                  galleryControlLabel={"uploading photos"}
-                  onClose={handleCloseUpload}
-                  custom={direction}
-                  closeButtonLabel="cancel upload"
-                />
-              ) : (
-                <BracketButton label="upload photos" onClick={handleUpload} />
-              )}
-            </AnimatePresence>
-            <AnimatePresence mode="wait" custom={direction}>
-              {isGalleryOpen ? (
-                <GalleryControls
-                  key="gallery"
-                  galleryControlLabel={year !== null ? `year ${year}` : "2022"}
-                  onClose={handleCloseGallery}
-                  custom={direction}
-                  closeButtonLabel="close gallery"
-                />
-              ) : (
-                <BrandHeading key="brand" custom={direction} />
-              )}
-            </AnimatePresence>
-            <BracketButton label="sign out" onClick={handleSignOut} />
-          </motion.div>
-        </motion.header>
-      </LayoutGroup>
-    </AnimatePresence>
+    <>
+      <AnimatePresence mode="wait" initial={false}>
+        <LayoutGroup>
+          <motion.header
+            layout
+            variants={headerVariants}
+            className={HEADER_STYLE}
+            animate={showHeader ? "visible" : "hidden"}
+            transition={{
+              duration: 0.8,
+              ease: [0.5, 0.62, 0.62, 0.5],
+              type: "tween",
+            }}
+          >
+            <motion.div className={INNER_HEADER_STYLE} layout>
+              <div className="hidden md:block">
+                <AnimatePresence mode="wait" custom={direction}>
+                  {isUploadButtonPressed ? (
+                    <GalleryControls
+                      key="uploading"
+                      galleryControlLabel={"uploading photos"}
+                      onClose={handleCloseUpload}
+                      custom={direction}
+                      closeButtonLabel="cancel upload"
+                    />
+                  ) : (
+                    <BracketButton
+                      label="upload photos"
+                      onClick={handleUpload}
+                    />
+                  )}
+                </AnimatePresence>
+              </div>
+              <HamburgerIcon
+                open={mobileMenuOpen}
+                toggle={() => setMobileMenuOpen((prev) => !prev)}
+              />
+              <AnimatePresence mode="wait" custom={direction}>
+                {isGalleryOpen ? (
+                  <GalleryControls
+                    key="gallery"
+                    galleryControlLabel={
+                      year !== null ? `year ${year}` : "2022"
+                    }
+                    onClose={handleCloseGallery}
+                    custom={direction}
+                    closeButtonLabel="close gallery"
+                  />
+                ) : (
+                  <BrandHeading key="brand" custom={direction} />
+                )}
+              </AnimatePresence>
+              <div className="hidden md:block">
+                <BracketButton label="sign out" onClick={handleSignOut} />
+              </div>
+            </motion.div>
+          </motion.header>
+        </LayoutGroup>
+      </AnimatePresence>
+      <MobileMenu
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen((prev) => !prev)}
+        onUpload={handleUpload}
+        onSignOut={handleSignOut}
+        isGalleryOpen={isGalleryOpen}
+        year={year}
+        closeGallery={handleCloseGallery}
+        direction={direction}
+        isUploadButtonPressed={isUploadButtonPressed}
+        onCancelUpload={handleCloseUpload}
+      />
+    </>
   );
 }
 const ClientHeader = React.memo(ClientHeaderComponent);

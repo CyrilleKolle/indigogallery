@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FixedSizeGrid as Grid } from "react-window";
 import React, { useRef, useEffect } from "react";

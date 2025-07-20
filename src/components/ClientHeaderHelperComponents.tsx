@@ -106,10 +106,10 @@ BrandHeading.displayName = "BrandHeading";
 const HOVER_SPAN =
   "transform inline-block origin-center transition-transform duration-200";
 const TITLE_STYLE = clsx(
-  "group flex flex-row gap-2 text-2xl md:text-2xl text-gray-300 uppercase",
+  "group flex flex-row gap-2 text-lg md:text-2xl text-gray-300 uppercase",
   "tracking-wide select-none transition-colors duration-150 hover:text-indigo-300"
 );
 const BTN_BASE = clsx(
-  "group inline-flex items-center gap-2 text-2xl md:text-2xl text-gray-300 uppercase",
+  "group inline-flex items-center gap-2 text-lg md:text-2xl text-gray-300 uppercase",
   "transition-colors duration-150 hover:text-indigo-300 cursor-pointer"
 );

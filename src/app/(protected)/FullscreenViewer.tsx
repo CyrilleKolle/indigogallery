@@ -167,4 +167,6 @@ export const FullscreenViewer = React.memo(
     );
   }
 );
+
+RetractButton.displayName = "RetractButton";
 FullscreenViewer.displayName = "FullscreenViewer";
