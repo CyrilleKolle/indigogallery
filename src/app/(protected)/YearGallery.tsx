@@ -12,6 +12,7 @@ import { cn } from "@/utilities";
 import Banner from "@/components/GalleryBanner";
 import { useVisibility } from "@/store";
 import { FullscreenViewer } from "./FullscreenViewer";
+import { PageWrapper } from "./upload/UploadClientComponents";
 
 const VIRTUALIZE_THRESHOLD = 220;
 const INITIAL_LOAD_TARGET = 5;
@@ -81,23 +82,16 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
     <AnimatePresence>
       <LayoutGroup>
         <motion.div
-          className={GALLERY_CONTAINER}
+          className={cn(GALLERY_CONTAINER, COMMON_BASE)}
           layout
           key={`year-gallery-${year}`}
         >
-          <motion.section
+          <PageWrapper
             key={`year-gallery-section-${year}`}
             ref={sectionRef}
             id={`year-gallery-${year}`}
             className={cn(SECTION_BASE)}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.5, 0.62, 0.62, 0.5],
-              type: "tween",
-            }}
+            data-year={year}
           >
             <Banner
               year={year}
@@ -141,7 +135,7 @@ const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
               </LayoutGroup>
             )}
             {showLoading && <LoadingImagesOverlay />}
-          </motion.section>
+          </PageWrapper>
         </motion.div>
         <FullscreenViewer
           key="fullscreen-viewer"
@@ -165,13 +159,19 @@ export { YearGallery };
 export default YearGallery;
 
 const GALLERY_CONTAINER = cn(
-  "w-full mx-auto max-w-6xl flex flex-col items-center relative",
-  "z-90 shadow-cyan-50/5 shadow-xl shadow-lg bg-gray-900/90 rounded-2xl",
-  "transition-opacity duration-200 mt-1 max-h-[85vh] overflow-y-auto h-fit my-auto"
+  "max-w-[90vw] lg:max-w-4xl xl:max-w-6xl relative z-90 rounded-2xl",
+  "my-1"
+);
+const COMMON_BASE = cn(
+  "flex flex-col items-center h-fit  overflow-y-auto",
+  "w-full mx-auto bg-gray-900/90 shadow-lg shadow-cyan-50/5",
+  "transition-opacity duration-200"
 );
 
 const SECTION_BASE = cn(
-  "w-full mx-auto rounded-2xl px-8 py-8 flex flex-col items-center relative z-90"
+  "w-full mx-auto rounded-2xl",
+  "py-3 px-3 md:px-8 md:py-8 flex ",
+  "flex-col items-center relative z-90"
 );
 const GALLERY_GRID = cn(
   "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full transition-opacity duration-200 mx-auto"

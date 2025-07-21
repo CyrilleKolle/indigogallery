@@ -44,9 +44,9 @@ const BannerComponent: React.FC<BannerProps> = ({
             Window into how {year} looked like
           </motion.h2>
           <BracketButton
-            label="scroll to top"
+            label="back to top"
             onClick={scrollTopFunction}
-            layout="position"
+            layout="size"
           />
         </motion.aside>
       )}
@@ -63,11 +63,11 @@ export const Banner = React.memo(BannerComponent, (prevProps, nextProps) => {
 export default Banner;
 
 const BANNER_BASE = cn(
-  "sticky top-0 z-100 w-full backdrop-blur-md  p-4 text-right transition-opacity duration-200 bg-gray-900/60 shadow-lg shadow-cyan-50/5",
-  "flex items-center justify-between gap-4"
+  "sticky top-0 z-100 w-full backdrop-blur-md p-2  md:p-4 transition-opacity duration-200 bg-gray-900/60 shadow-lg shadow-cyan-50/5",
+  "flex items-center justify-between md:gap-4"
 );
 const BANNER_TEXT =
-  "text-2xl font-medium tracking-wide text-gray-300 uppercase";
+  "text-lg/2 md:text-2xl font-medium tracking-wide text-gray-300 uppercase max-w-[65%] leading-none";
 const BANNER_TRANSITION = {
   duration: 0.4,
   ease: cubicBezier(0.5, 0.62, 0.62, 0.5),

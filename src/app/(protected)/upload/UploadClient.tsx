@@ -18,25 +18,6 @@ import {
   UploadForm,
 } from "./UploadClientComponents";
 
-  const SECTION_BASE = cn(
-    "py-6 px-3 md:py-8 md:px-8 flex flex-col items-center gap-2 md:gap-8",
-    "z-50 fixed inset-0 pointer-events-auto",
-    "h-fit lg:h-fit my-auto overflow-y-auto",
-    "place-content-center justify-stretch"
-  );
-const SECTION_ADDITIONAL = cn(
-  "w-full max-w-[90vw] lg:max-w-4xl xl:max-w-6xl mx-auto bg-gray-900/90 p-3 md:p-4 rounded-xl",
-  "shadow-lg opacity-95 transition-opacity duration-200 overflow-visible shadow-cyan-50/5"
-);
-const GALLERY_GRID = cn(
-  "grid grid-flow-col auto-cols-[minmax(theme(width.16),1fr)]",
-  "sm:grid-flow-row sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
-  "gap-1 sm:gap-2 md:gap-3 lg:gap-4 xl:gap-5",
-  "overflow-x-auto overflow-y-hidden",
-  "sm:overflow-x-hidden sm:overflow-y-auto sm:max-h-80",
-  "w-full transition-opacity duration-200 scrollbar-thin scrollbar-thumb-gray-700"
-);
-
 const TODAY_YEAR = new Date().getFullYear().toString();
 
 export default function UploadClient() {
@@ -85,7 +66,7 @@ export default function UploadClient() {
   });
 
   return (
-    <PageWrapper className={cn(SECTION_BASE, SECTION_ADDITIONAL)}>
+    <PageWrapper className={cn(SECTION_BASE, SECTION_ADDITIONAL, COMMON_BASE)}>
       <UploadForm onSubmit={onSubmit}>
         <LabelComponent
           label="Year"
@@ -100,13 +81,7 @@ export default function UploadClient() {
           inputRegister={register("files")}
           inputType="file"
           inputPlaceholder="Select images"
-          inputClassName="block w-full text-lg tracking-wider text-gray-300 
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-lg file:border-0
-                       file:text-base md:file:text-xl file:font-semibold
-                       file:bg-sky-900 file:text-gray-300
-                       file:transition-colors file:duration-200
-                       hover:file:bg-cyan-400 hover:file:text-indigo-900"
+          inputClassName={INPUT_BASE}
           errors={errors.files ? errors.files.message : null}
           inputProps={{ multiple: true, accept: "image/*" }}
         />
@@ -143,3 +118,36 @@ export default function UploadClient() {
     </PageWrapper>
   );
 }
+
+const SECTION_BASE = cn(
+  "py-6 px-3 md:py-8 md:px-8 gap-2 md:gap-8",
+  "z-50 fixed inset-0 pointer-events-auto",
+  "place-content-center justify-stretch"
+);
+const SECTION_ADDITIONAL = cn(
+  "max-w-[90vw] lg:max-w-4xl xl:max-w-6xl",
+  "p-3 md:p-4 rounded-xl opacity-95 overflow-visible"
+);
+const GALLERY_GRID = cn(
+  "grid grid-flow-col auto-cols-[minmax(theme(width.16),1fr)]",
+  "sm:grid-flow-row sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+  "gap-1 sm:gap-2 md:gap-3 lg:gap-4 xl:gap-5",
+  "overflow-x-auto overflow-y-hidden",
+  "sm:overflow-x-hidden sm:overflow-y-auto sm:max-h-80",
+  "w-full transition-opacity duration-200 scrollbar-thin scrollbar-thumb-gray-700"
+);
+const COMMON_BASE = cn(
+  "flex flex-col items-center h-fit my-auto overflow-y-auto",
+  "w-full mx-auto bg-gray-900/90 shadow-lg shadow-cyan-50/5",
+  "transition-opacity duration-200"
+);
+
+const INPUT_BASE = cn(
+  "block w-full text-lg tracking-wider text-gray-300",
+  "file:mr-4 file:py-2 file:px-4",
+  "file:rounded-lg file:border-0",
+  "file:text-base md:file:text-xl file:font-semibold",
+  "file:bg-sky-900 file:text-gray-300",
+  "file:transition-colors file:duration-200",
+  "hover:file:bg-cyan-400 hover:file:text-indigo-900"
+);

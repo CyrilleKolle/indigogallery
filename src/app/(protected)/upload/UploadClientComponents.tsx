@@ -7,10 +7,14 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 export interface PageWrapperProps {
   children: React.ReactNode;
   className?: string;
+  ref?: React.Ref<HTMLElement>;
+  id?: string;
 }
 export const PageWrapper: React.FC<PageWrapperProps> = ({
   children,
   className,
+  ref,
+  id,
 }) => {
   return (
     <motion.section
@@ -23,6 +27,8 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
         ease: [0.5, 0.62, 0.62, 0.5],
         type: "tween",
       }}
+      ref={ref}
+      id={id}
     >
       {children}
     </motion.section>
