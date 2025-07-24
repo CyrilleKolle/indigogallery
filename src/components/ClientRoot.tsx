@@ -5,6 +5,7 @@ import { useAuth } from "./AuthProvider";
 import ClientHeader from "./ClientHeader";
 import clsx from "clsx";
 import { cn } from "@/utilities";
+import { usePathname } from "next/navigation";
 
 export default function ClientRoot({
   children,
@@ -13,10 +14,12 @@ export default function ClientRoot({
 }) {
   const { user, ready } = useAuth();
   const globeLocked = !ready || !user;
+  const pathname = usePathname();
+  const pages = pathname.startsWith("/(protected)") || pathname.startsWith("/upload") || pathname.startsWith("/year/");
   return (
     <div className={CONTAINER}>
       <div className={cn(GLOBE_STYLE, globeLocked && GLOBE_LOCKED_STYLE)}>
-        <YearGlobe />
+        <YearGlobe interactionsEnabled={!pages}/>
       </div>
       {user && (
         <header className={HEADER_STYLE} style={{ height: HEADER_HEIGHT }}>
@@ -27,6 +30,13 @@ export default function ClientRoot({
         id="main-content"
         className={MAIN_STYLE}
         style={{ top: HEADER_TOP_STYLE, bottom: HEADER_BOTTOM_STYLE }}
+        role="main"
+        aria-label="Main content"
+        data-testid="main-content"
+        data-header-top={HEADER_TOP_STYLE}
+        data-header-bottom={HEADER_BOTTOM_STYLE}
+        data-header-height={HEADER_HEIGHT}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </main>

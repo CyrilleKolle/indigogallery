@@ -20,17 +20,24 @@ import ProgressBridge from "./ProgressBridge";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Moon } from "./Moon";
 
-export function YearGlobe() {
+interface YearGlobeProps {
+  interactionsEnabled: boolean;
+}
+export function YearGlobe({ interactionsEnabled = true }: YearGlobeProps) {
   const controlsRef = useRef<ThreeOrbitControls>(null);
   const galaxyHDR = "/galaxy.hdr";
 
   return (
     <Canvas
       gl={{ antialias: true, alpha: true }}
-      style={casvasStyle}
+      style={{...casvasStyle, ...{ pointerEvents: interactionsEnabled ? "auto" : "none" }}}
+      events={interactionsEnabled ? undefined : undefined}
       dpr={1}
       camera={{ position: [60, 200, 800], fov: 50, near: 0.1, far: 2000 }}
       shadows={false}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
     >
       <Suspense fallback={null}>
         <ProgressBridge />

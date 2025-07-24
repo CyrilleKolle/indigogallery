@@ -7,33 +7,30 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 export interface PageWrapperProps {
   children: React.ReactNode;
   className?: string;
-  ref?: React.Ref<HTMLElement>;
+  ref?: React.Ref<HTMLElement | null>;
   id?: string;
 }
-export const PageWrapper: React.FC<PageWrapperProps> = ({
-  children,
-  className,
-  ref,
-  id,
-}) => {
-  return (
-    <motion.section
-      className={className}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{
-        duration: 0.5,
-        ease: [0.5, 0.62, 0.62, 0.5],
-        type: "tween",
-      }}
-      ref={ref}
-      id={id}
-    >
-      {children}
-    </motion.section>
-  );
-};
+export const PageWrapper = React.forwardRef<HTMLDivElement, PageWrapperProps>(
+  ({ children, className, id }, ref) => {
+    return (
+      <motion.section
+        className={className}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{
+          duration: 0.5,
+          ease: [0.5, 0.62, 0.62, 0.5],
+          type: "tween",
+        }}
+        ref={ref}
+        id={id}
+      >
+        {children}
+      </motion.section>
+    );
+  }
+);
 
 interface UploadFormProps {
   onSubmit: () => void;

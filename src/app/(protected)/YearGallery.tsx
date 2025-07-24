@@ -23,7 +23,7 @@ interface YearGalleryProps {
 }
 
 const YearGalleryComponent: React.FC<YearGalleryProps> = ({ year, files }) => {
-  const sectionRef = React.useRef<HTMLElement>(null);
+  const sectionRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement>(null);
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
