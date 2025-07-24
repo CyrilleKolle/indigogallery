@@ -6,6 +6,10 @@
   --app-header-h: 64px;
   --app-header-gap: 10px;
   --app-bottom-gap: 64px;
+  --viewer-pad-inline: clamp(12px, 4vw, 24px); 
+  --viewer-pad-block: clamp(8px, 4vh, 24px);
+  --viewer-btn-size: 40px;
+  --viewer-max-img-h: 82vh;
 }
 
 @theme inline {

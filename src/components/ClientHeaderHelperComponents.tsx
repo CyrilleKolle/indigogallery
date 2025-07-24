@@ -3,6 +3,7 @@
 import { motion, Variants } from "framer-motion";
 import React, { ComponentPropsWithoutRef, memo } from "react";
 import clsx from "clsx";
+import { cn } from "@/utilities";
 
 const slideVariants: Variants = {
   initial: (dir: number) => ({ opacity: 0, y: dir * -24 }),
@@ -34,19 +35,31 @@ interface BracketButtonProps
   extends ComponentPropsWithoutRef<typeof motion.button> {
   label: string;
   layout?: "position" | "size";
+  extraClassName?: string;
+  brackets?: boolean;
 }
 
 export const BracketButton = memo(
-  ({ label, layout = "position", ...rest }: BracketButtonProps) => (
+  ({
+    label,
+    layout = "position",
+    extraClassName,
+    brackets = true,
+    ...rest
+  }: BracketButtonProps) => (
     <motion.button
       whileTap={{ scale: 0.95 }}
-      className={BTN_BASE}
+      className={cn(BTN_BASE, extraClassName)}
       layout={layout}
       {...rest}
     >
-      <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>[</span>
+      {brackets && (
+        <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>[</span>
+      )}
       <span className={clsx(HOVER_SPAN, "group-hover:scale-90")}>{label}</span>
-      <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>]</span>
+      {brackets && (
+        <span className={clsx(HOVER_SPAN, "group-hover:scale-125")}>]</span>
+      )}
     </motion.button>
   )
 );

@@ -226,17 +226,16 @@ export function GalleryItem({
       animate={{ scale: cardScale, boxShadow: cardShadow }}
       className={clsx(
         "relative overflow-hidden rounded-lg cursor-pointer",
-        expanded ? "z-20" : "shadow-lg"
+        expanded ? "z-20 col-span-2 row-span-3 sm:col-span-3" : "shadow-lg"
       )}
-      style={expanded ? { gridColumn: "span 3", gridRow: "span 3" } : {}}
       transition={{
         duration: 0.2,
-        ease: [0.5, 0.62, 0.62, 0.5],
+        ease: [0.3, 0.28, 0.28, 0.31],
         type: "tween",
       }}
       whileHover={expanded ? "rest" : "hover"}
       initial="rest"
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.99 }}
     >
       <motion.div
         variants={imgVariants}
@@ -244,7 +243,7 @@ export function GalleryItem({
         style={expanded ? { originX: 0.5, originY: 0.5 } : {}}
         transition={
           expanded
-            ? { duration: 0.4, ease: [0.5, 0.62, 0.62, 0.5], type: "tween" }
+            ? { duration: 0.4, ease: [0.3, 0.28, 0.28, 0.3], type: "tween" }
             : {}
         }
       >
@@ -268,8 +267,8 @@ export function GalleryItem({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{
-              duration: 0.25,
-              ease: [0.4, 0.0, 0.2, 1],
+              duration: 0.2,
+              ease: [0.3, 0.28, 0.28, 0.3],
               type: "tween",
             }}
             className="absolute bottom-0 left-0 right-0 flex items-center justify-between

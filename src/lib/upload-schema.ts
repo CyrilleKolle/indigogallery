@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const DESCRIPTION_LIMIT = 200;
+
 /**
  * Schema for validating upload form data.
  * - `year`: must be a 4-digit string between 2015 and the current year.
@@ -20,6 +22,10 @@ export const schema = z.object({
       (list) => Array.from(list).every((f) => f.type.startsWith("image/")),
       "All files must be images"
     ),
+  description: z
+    .string()
+    .max(DESCRIPTION_LIMIT, `Max ${DESCRIPTION_LIMIT} characters`)
+    .optional()
 });
 
 export type FormValues = z.infer<typeof schema>;

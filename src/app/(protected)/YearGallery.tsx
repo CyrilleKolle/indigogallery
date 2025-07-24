@@ -160,7 +160,7 @@ export default YearGallery;
 
 const GALLERY_CONTAINER = cn(
   "max-w-[90vw] lg:max-w-4xl xl:max-w-6xl relative z-90 rounded-2xl",
-  "my-1"
+  "my-auto"
 );
 const COMMON_BASE = cn(
   "flex flex-col items-center h-fit  overflow-y-auto",

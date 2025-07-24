@@ -84,6 +84,8 @@ const MobileMenuComponent: React.FC<MobileMenuProps> = ({
             disabled={!isGalleryOpen}
             label={isGalleryOpen ? `close year ${year}` : "indigo's gallery"}
             onClick={handleCloseGallery}
+            extraClassName={cn(!isGalleryOpen && "text-fuchsia-400/95 cursor-not-allowed")}
+            brackets={isGalleryOpen}
           />
           <BracketButton
             label={isUploadButtonPressed ? "cancel upload" : "upload photos"}

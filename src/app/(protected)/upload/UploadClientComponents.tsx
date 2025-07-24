@@ -133,6 +133,7 @@ interface SubmitSectionProps {
   isPending?: boolean;
   serverError?: string | null;
   successMsg?: string | null;
+  onClick?: () => void;
 }
 
 export const SubmitSection: React.FC<SubmitSectionProps> = ({
@@ -140,11 +141,13 @@ export const SubmitSection: React.FC<SubmitSectionProps> = ({
   isPending = false,
   serverError = null,
   successMsg = null,
+  onClick = () => {},
 }) => {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <button
         type="submit"
+        onClick={onClick}
         disabled={valid || isPending}
         className="px-4 md:px-6 py-3 rounded-lg bg-sky-700 hover:bg-cyan-400 disabled:bg-gray-700 hover:text-indigo-700 disabled:cursor-not-allowed hover:disabled:text-gray-400 disabled:text-gray-500
                      transition-colors font-semibold tracking-wide"
